@@ -21,26 +21,26 @@ pinlabel=PD3
 T 2950 900 5 8 0 0 0 8 1
 pintype=io
 }
-P 3300 2500 3000 2500 1 0 0
-{
-T 3095 2545 5 8 1 1 0 0 1
-pinnumber=2
-T 3100 2450 5 8 0 0 0 2 1
-pinseq=2
-T 2945 2495 9 8 1 1 0 7 1
-pinlabel=RXD
-T 2950 2500 5 8 0 0 0 8 1
-pintype=io
-}
 P 3300 2100 3000 2100 1 0 0
 {
 T 3095 2145 5 8 1 1 0 0 1
-pinnumber=3
+pinnumber=2
 T 3100 2050 5 8 0 0 0 2 1
-pinseq=3
+pinseq=2
 T 2945 2095 9 8 1 1 0 7 1
-pinlabel=TXD
+pinlabel=RXD
 T 2950 2100 5 8 0 0 0 8 1
+pintype=io
+}
+P 3300 2500 3000 2500 1 0 0
+{
+T 3095 2545 5 8 1 1 0 0 1
+pinnumber=3
+T 3100 2450 5 8 0 0 0 2 1
+pinseq=3
+T 2945 2495 9 8 1 1 0 7 1
+pinlabel=TXD
+T 2950 2500 5 8 0 0 0 8 1
 pintype=io
 }
 P 0 2300 300 2300 1 0 0
