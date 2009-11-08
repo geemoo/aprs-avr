@@ -1,3 +1,4 @@
+#include <stdint.h>
 #include <avr/io.h>
 #include "aprs.h"
 
@@ -13,8 +14,11 @@ int main(void) {
 	// set the SSID we'll be using
 	aprs_set_ssid(11);
 	
+	// send out our version packet
+	aprs_send_version();
+
 	// now send out a message to everyone
-	aprs_broadcast_msg("Hello World!");
+	aprs_send_msg("WIDE2", 2, "Hello World!");
 
 	return 0;
 }

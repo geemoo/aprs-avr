@@ -1,11 +1,16 @@
+#include <stdint.h>
 #include "ax25.h"
+#include "aprs.h"
+
+
+static struct aprs_info ai;
 
 /********************************************************************
 * initialize our aprs engine */
 uint8_t aprs_init()
 {
-	
-	return 0;
+	// so far this doesn't really need to do anything
+	return 1;
 }
 
 
@@ -13,7 +18,25 @@ uint8_t aprs_init()
 * set the callsign we'll be using */
 uint8_t aprs_set_callsign(char *callsign)
 {
-	return 0;
+	uint8_t i;
+	char *ptr;
+
+	// initialize our loop variables
+	i = CALLSIGN_LIMIT - 1;
+	ptr = callsign;
+
+	// loop until we get to 8 characters
+	while(i && *ptr) {
+		// copy the characters
+		*ai.callsign = *ptr;
+
+		// increment our counter and pointer
+		i--;
+		ptr++;
+	}
+	
+	// return success
+	return 1;
 }
 
 
@@ -21,16 +44,43 @@ uint8_t aprs_set_callsign(char *callsign)
 * set the SSID we'll be using */
 uint8_t aprs_set_ssid(uint8_t ssid)
 {
+	// copy the ssid
+	ai.ssid = ssid;
 
-	return 0;
+	// return a successful outcome
+	return 1;
+}
+
+
+/********************************************************************
+* send out the version message */
+uint8_t aprs_send_version(void)
+{
+	// send out the ax25 header
+	ax25_send_header(ai.callsign, 0, "APDNI", 0);
+
+	// send out the ax25 footer
+	ax25_send_footer();
+
+	return 1;
 }
 
 
 /********************************************************************
 * now send out a message to everyone */
-uint8_t aprs_broadcast_msg(char *msg)
+uint8_t aprs_send_msg(char *to, uint8_t tossid, char *msg)
 {
+	// send out the ax25 header
+	ax25_send_header(ai.callsign, ai.ssid, to, tossid);
 
-	return 0;
+	// send out the message character
+	ax25_send_char(':');
+
+	// send the string they want to send
+	ax25_send_string(msg);
+
+	// now send the ax25 footer
+	ax25_send_footer();
+
+	return 1;
 }
-
