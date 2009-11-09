@@ -20,6 +20,7 @@ struct aprs_info
 uint8_t aprs_init(void);
 uint8_t aprs_set_callsign(char *);
 uint8_t aprs_set_ssid(uint8_t);
+uint8_t aprs_send_version(void);
 uint8_t aprs_send_msg(char *, uint8_t, char *);
 
 #endif

@@ -9,6 +9,13 @@ static struct aprs_info ai;
 * initialize our aprs engine */
 uint8_t aprs_init()
 {
+	struct ax25_info ax25info;
+
+	ax25info.protocol_id = 0xf0;
+
+	// initialize our ax25 (can we call this a socket? endpoint?)
+	ax25_init(&ax25info);
+
 	// so far this doesn't really need to do anything
 	return 1;
 }

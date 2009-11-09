@@ -5,6 +5,12 @@
 
 
 /********************************************************************
+* some global variables this library will use */
+
+// somewhere to store ax25 header info we don't want to hard code
+static struct ax25_info ai;
+
+/********************************************************************
 * Interrupt routine for TIMER0 */
 ISR(TIMER0_OVF_vect)
 {
@@ -30,7 +36,21 @@ ISR(ANA_COMP_vect)
 2		FCS
 1		Flag
 
+
+1200Hz and 2200Hz tones seem important
+
+
 */
+
+/********************************************************************
+* initialize some of our ax25 information */
+uint8_t ax25_init(struct ax25_info *info)
+{
+	// copy all the fields to our internal info struct
+	ai.protocol_id = info->protocol_id;
+
+	return 1;
+}
 
 
 /********************************************************************
