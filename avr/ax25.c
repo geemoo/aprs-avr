@@ -37,7 +37,8 @@ ISR(ANA_COMP_vect)
 1		Flag
 
 
-1200Hz and 2200Hz tones seem important
+1200Hz and 2200Hz tones are used to represent a 1 and 0 digital bits
+http://en.wikipedia.org/wiki/Bell_202_modem
 
 
 */
@@ -68,7 +69,7 @@ uint8_t ax25_send_header(char *from, uint8_t fromssid, char *to, uint8_t tossid)
 	ax25_send_char(0x03);
 
 	// send the protocol ID
-	ax25_send_char(0xf0);
+	ax25_send_char(ai.protocol_id);
 
 
 
