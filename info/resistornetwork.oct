@@ -1,0 +1,31 @@
+#!/usr/bin/octave
+
+
+# computes the parallel resistance of the values given
+# 1 / ((1 / a) + (1 / b) + ...)
+function par_resistance(rl)
+
+	# init our vars
+	total = 0;
+
+	# make sure r is a 1xsomething list
+	if (size(rl)(1) != 1)
+		printf("Resistor network must be a 1xsomething dimensional network\n");
+		return
+	endif
+
+
+endfunction
+
+
+# list of resistor values that we want to choose from
+r = [ 22000 19000 15000 10000 8200 6800 4700 3900 3300 2700 2200 1900 1500 1200 1000 820 680 470 330 220 190 150 100 ];
+
+# we need to loop through all resistors in R, choosing any 1-6 of them, and computing the resistance
+for i = 1:6
+	p = nchoosek(r, i)
+
+	# now go through this list, and call par_resistance on it and store the results
+	totals(i) = par_resistance(p);
+
+endfor
