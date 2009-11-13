@@ -1,31 +1,47 @@
-#!/usr/bin/octave
+#!/usr/bin/octave -q
 
 
-# computes the parallel resistance of the values given
-# 1 / ((1 / a) + (1 / b) + ...)
-function par_resistance(rl)
+function results = parallel_resistance(resistances)
+	total = 0;
+	# now go through the list and compute the resistances
+	for i = 1:size(resistances)(2);
+		total = total + (1 / resistances(i));
+	endfor
+
+	results = (1 / total);
+endfunction
+
+
+
+# computes all of the possible parallel resistances from the values given
+function results = compute_resistances(s)
 
 	# init our vars
 	total = 0;
 
-	# make sure r is a 1xsomething list
-	if (size(rl)(1) != 1)
-		printf("Resistor network must be a 1xsomething dimensional network\n");
-		return
-	endif
+	# loop through 1 to 6 for each set size
+	for n = 1:6; 
+		# get all permutations of size n
+		p = nchoosek(s, n);
 
-
+		# loop through the sets of p
+		for i = 1:size(p)(1)
+			# now compute the resistance of this set
+			results(6*(n-1)+i) = parallel_resistance(p(i,:));
+		endfor
+	endfor
 endfunction
 
 
 # list of resistor values that we want to choose from
-r = [ 22000 19000 15000 10000 8200 6800 4700 3900 3300 2700 2200 1900 1500 1200 1000 820 680 470 330 220 190 150 100 ];
+#r = [ 22000 19000 15000 10000 8200 6800 4700 3900 3300 2700 2200 1900 1500 1200 1000 820 680 470 330 220 190 150 100 ];
+r = [ 8200 3900 2000 1000 470 330 270 ];
 
 # we need to loop through all resistors in R, choosing any 1-6 of them, and computing the resistance
-for i = 1:6
-	p = nchoosek(r, i)
+p = nchoosek(r, 6);
 
-	# now go through this list, and call par_resistance on it and store the results
-	totals(i) = par_resistance(p);
-
+# now go through this list, and call par_resistance on it and store the results
+for i = 1:size(p)(1);
+	a = compute_resistances( p(i,:) );
+	a = sort(a') / max(a)
 endfor
