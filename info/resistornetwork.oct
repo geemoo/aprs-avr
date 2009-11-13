@@ -1,6 +1,8 @@
 #!/usr/bin/octave -q
 
 
+##########################################################################
+# computes the parallel resistance of the set
 function results = parallel_resistance(resistances)
 	total = 0;
 	# now go through the list and compute the resistances
@@ -13,6 +15,7 @@ endfunction
 
 
 
+##########################################################################
 # computes all of the possible parallel resistances from the values given
 function results = compute_resistances(s)
 
@@ -33,6 +36,18 @@ function results = compute_resistances(s)
 endfunction
 
 
+##########################################################################
+# loops through the various resolutions of sinewaves and sees what 
+# the best match it can achieve is
+function results = compare_to_sine(s)
+	results = 1;
+
+endfunction
+
+
+##########################################################################
+# MAIN
+
 # list of resistor values that we want to choose from
 #r = [ 22000 19000 15000 10000 8200 6800 4700 3900 3300 2700 2200 1900 1500 1200 1000 820 680 470 330 220 190 150 100 ];
 r = [ 8200 3900 2000 1000 470 330 270 ];
@@ -41,7 +56,23 @@ r = [ 8200 3900 2000 1000 470 330 270 ];
 p = nchoosek(r, 6);
 
 # now go through this list, and call par_resistance on it and store the results
+results = [];
 for i = 1:size(p)(1);
-	a = compute_resistances( p(i,:) );
-	a = sort(a') / max(a)
+	# assign to a var so our code doesn't get uglier
+	a = p(i,:);
+
+	# convert the set to a string
+	astr = sprintf("%d ", a);
+
+	# and now store it
+#	results(i,1) = astr;
+
+	# compute the resistances of that set
+#	b = compute_resistances(a);
+#	b = sort(b') / max(b)
+
+	# now compare the results of that to a sineway of various degrees
+#	results(i,2) = compare_to_sine(a);
 endfor
+
+results
