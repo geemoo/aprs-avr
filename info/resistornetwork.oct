@@ -20,6 +20,7 @@ endfunction
 function results = compute_resistances(s)
 
 	# init our vars
+	index = 1;
 	total = 0;
 
 	# loop through 1 to 6 for each set size
@@ -30,7 +31,8 @@ function results = compute_resistances(s)
 		# loop through the sets of p
 		for i = 1:size(p)(1)
 			# now compute the resistance of this set
-			results(6*(n-1)+i) = parallel_resistance(p(i,:));
+			results(index) = parallel_resistance(p(i,:));
+			index++;
 		endfor
 	endfor
 endfunction
@@ -39,8 +41,22 @@ endfunction
 ##########################################################################
 # loops through the various resolutions of sinewaves and sees what 
 # the best match it can achieve is
-function results = compare_to_sine(s)
-	results = 1;
+function results = compare_to_sine(resistances, center, sinelist)
+
+	difflist = [];
+	
+	# now take our resistances and scale them to 0 to 2, centered on 1.
+	resistances = resistances / center * 2;
+
+	# loop through sinewave values and see if each of them is in the resistances
+	for n = 1:size(sinelist)(2);
+		a = sinelist(n);
+		b = min(abs(resistances - a));
+		difflist(n) = b;
+	endfor
+
+	# return the worst result found
+	results = max(difflist);
 
 endfunction
 
@@ -50,10 +66,25 @@ endfunction
 
 # list of resistor values that we want to choose from
 #r = [ 22000 19000 15000 10000 8200 6800 4700 3900 3300 2700 2200 1900 1500 1200 1000 820 680 470 330 220 190 150 100 ];
-r = [ 8200 3900 2000 1000 470 330 270 ];
+#r = [ 15000 8200 5600 4700 2700 220];
+#r = [ 15000 12000 10000 8200 6800 4700 3900 3300 2700 2200 1900 1500 1200 1000 820 680 470 330 220 190 150 100 ];
+r = [ 56000 47000 39000 33000 27000 22000 19000 15000 12000 10000 8200 6800 4700 3900 3300 2700 2200 1900 1500 1200 1000 820 680 470 390 330 270 220 190 150 100 ];
+
+bestrank = 1.000;
+bestcenter = 0;
+bestresistors = "";
 
 # we need to loop through all resistors in R, choosing any 1-6 of them, and computing the resistance
+printf("Computing permutation list...");
 p = nchoosek(r, 6);
+printf("done.\n");
+
+# create a sinewave
+printf("Computing sinewave to generate...");
+resolution = 15;
+sw = [0:359/resolution] * resolution;
+sw = sin(sw * pi / 180) + 1;
+printf("done.\n");
 
 # now go through this list, and call par_resistance on it and store the results
 results = [];
@@ -61,18 +92,31 @@ for i = 1:size(p)(1);
 	# assign to a var so our code doesn't get uglier
 	a = p(i,:);
 
-	# convert the set to a string
-	astr = sprintf("%d ", a);
-
-	# and now store it
-#	results(i,1) = astr;
-
 	# compute the resistances of that set
-#	b = compute_resistances(a);
-#	b = sort(b') / max(b)
+	b = compute_resistances(a);
+	b = sort(b);
 
-	# now compare the results of that to a sineway of various degrees
-#	results(i,2) = compare_to_sine(a);
+	for j = 1:size(b)(2);
+
+		c = compare_to_sine(b, b(j), sw);
+		if (c <= bestrank);
+			bestresistors = a;
+			bestcenter = b(j);
+			bestrank = c;
+			printf("\n-----------------------------------------\n");
+			brstr = sprintf("%d ", bestresistors);
+			printf("Resistors: %s\n", brstr);
+			printf("Center: %f\n", bestcenter);
+			printf("Match Rank: %f\n\n", bestrank);
+		endif
+	endfor
+
+	printf(".");
 endfor
 
-results
+printf("\n-----------------------------------------\n");
+brstr = sprintf("%d ", bestresistors);
+printf("Resistors: %s\n", brstr);
+printf("Center: %f\n", bestcenter);
+printf("Match Rank: %f\n\n", bestrank);
+
