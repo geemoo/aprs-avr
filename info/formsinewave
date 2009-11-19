@@ -1,0 +1,29 @@
+#!/usr/bin/octave -q
+
+source "libresist.oct";
+
+
+# list of resistor values that we want to choose from
+r = [ 33000 12000 10000 8200 2000 330 ];
+
+# create a sinewave
+printf("Computing sinewave to generate...");
+resolution = 15;
+sw = [0:359/resolution] * resolution;
+sw = sin(sw * pi / 180) + 1;
+printf("done.\n");
+
+# generate the list of possible resistances
+rlist = compute_resistances(r);
+
+# prep up our matrix for results
+results = zeros(size(sw)(2), 8);
+
+# assign the values of the sinewave to it
+results(:,1) = sw;
+
+# for each sine value, find the closes resistance, and the resistors that made it
+for i = 1:size(sw)(2);
+	
+
+endfor

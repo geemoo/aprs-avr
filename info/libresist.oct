@@ -1,0 +1,63 @@
+#!/usr/bin/octave -q
+
+
+##########################################################################
+# computes the parallel resistance of the set
+function results = parallel_resistance(resistances)
+	total = 0;
+	# now go through the list and compute the resistances
+	for i = 1:size(resistances)(2);
+		total = total + (1 / resistances(i));
+	endfor
+
+	results = (1 / total);
+endfunction
+
+
+
+##########################################################################
+# computes all of the possible parallel resistances from the values given
+function results = compute_resistances(s)
+
+	# init our vars
+	index = 1;
+	total = 0;
+
+	# loop through 1 to 6 for each set size
+	for n = 1:6; 
+		# get all permutations of size n
+		p = nchoosek(s, n);
+
+		# loop through the sets of p
+		for i = 1:size(p)(1)
+			# now compute the resistance of this set
+			results(index) = parallel_resistance(p(i,:));
+			index++;
+		endfor
+	endfor
+endfunction
+
+
+##########################################################################
+# loops through the various resolutions of sinewaves and sees what 
+# the best match it can achieve is
+function results = compare_to_sine(resistances, center, sinelist)
+
+	difflist = [];
+	
+	# now take our resistances and scale them to 0 to 2, centered on 1.
+	resistances = resistances / center * 2;
+
+	# loop through sinewave values and see if each of them is in the resistances
+	for n = 1:size(sinelist)(2);
+		a = sinelist(n);
+		b = min(abs(resistances - a));
+		difflist(n) = b;
+	endfor
+
+	# return the worst result found
+	results = max(difflist);
+
+endfunction
+
+
